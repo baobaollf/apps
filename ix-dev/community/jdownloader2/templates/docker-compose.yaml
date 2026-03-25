@@ -4,24 +4,28 @@
 {% set perm_container = tpl.deps.perms(values.consts.perms_container_name) %}
 {% set perms_config = {"uid": values.run_as.user, "gid": values.run_as.group, "mode": "check"} %}
 
-{% do c1.set_user(values.run_as.user, values.run_as.group) %}
+{% do c1.add_caps(["CHOWN", "DAC_OVERRIDE", "FOWNER", "SETGID", "SETUID", "NET_BIND_SERVICE", "KILL"]) %}
+{% do c1.set_read_only(False) %}
 {% do c1.healthcheck.set_test("pgrep", {"process": "java"}) %}
 
 {% do c1.environment.add_env("MYJD_DEVICE_NAME", values.jdownloader2.myjd_name) %}
 {% do c1.environment.add_env("MYJD_USER", values.jdownloader2.myjd_user) %}
 {% do c1.environment.add_env("MYJD_PASSWORD", values.jdownloader2.myjd_password) %}
-{% do c1.environment.add_env("XDG_DOWNLOAD_DIR", "/opt/JDownloader/Downloads") %}
 {% do c1.environment.add_user_envs(values.jdownloader2.additional_envs) %}
 
 {% if not values.network.host_network %}
   {% do c1.add_port(values.network.direct_connection_port, {"container_port": 3129}) %}
+  {% do c1.add_port(values.network.webui_port, {"container_port": 5800}) %}
 {% endif %}
 
-{% do c1.add_storage("/opt/JDownloader/app/cfg", values.storage.config) %}
+{% do c1.add_storage("/config", values.storage.config) %}
 {% do perm_container.add_or_skip_action("config", values.storage.config, perms_config) %}
 
-{% do c1.add_storage("/opt/JDownloader/Downloads", values.storage.downloads) %}
+{% do c1.add_storage("/output", values.storage.downloads) %}
 {% do perm_container.add_or_skip_action("downloads", values.storage.downloads, perms_config) %}
+
+{% do c1.add_storage("/tmp", {"type": "anonymous"}) %}
+{% do c1.add_storage("/var/run", {"type": "anonymous"}) %}
 
 {% for store in values.storage.additional_storage %}
   {% do c1.add_storage(store.mount_path, store) %}
@@ -34,5 +38,6 @@
 {% endif %}
 
 {% do tpl.notes.set_body(values.consts.notes_body) %}
+{% do tpl.portals.add(values.network.webui_port) %}
 
 {{ tpl.render() | tojson }}

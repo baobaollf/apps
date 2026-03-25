@@ -11,9 +11,12 @@ jdownloader2:
 
 network:
   host_network: false
-  direct_connection_port:
+  webui_port:
     bind_mode: published
-    port_number: 8080
+    port_number: 30800
+  direct_connection_port:
+    bind_mode: ""
+    port_number: 3129
 
 run_as:
   user: 568

@@ -1,12 +1,18 @@
-app_version: 2.3.0
-capabilities: []
+app_version: v26.03.1
+capabilities:
+- CHOWN
+- DAC_OVERRIDE
+- FOWNER
+- SETGID
+- SETUID
+- KILL
 categories:
 - media
-changelog_url: https://github.com/jaymoulin/docker-jdownloader/releases
+changelog_url: https://github.com/jlesage/docker-jdownloader-2/releases
 date_added: '2025-03-19'
 description: JDownloader is a free, open-source download management tool with a huge
   community that makes downloading as easy and fast as it should be.
-home: https://github.com/jaymoulin/docker-jdownloader
+home: https://github.com/jlesage/docker-jdownloader-2
 host_mounts: []
 icon: https://media.sys.truenas.net/apps/jdownloader2/icons/icon.png
 keywords:
@@ -28,8 +34,8 @@ run_as_context:
   user_name: Host user is [apps]
 screenshots: []
 sources:
-- https://github.com/jaymoulin/docker-jdownloader
-- https://hub.docker.com/r/jaymoulin/jdownloader/
+- https://github.com/jlesage/docker-jdownloader-2
+- https://hub.docker.com/r/jlesage/jdownloader-2/
 title: JDownloader2
 train: community
 version: 1.1.4
